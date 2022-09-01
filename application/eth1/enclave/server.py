@@ -18,7 +18,7 @@ def kms_call(credential, ciphertext):
 
     subprocess_args = [
         "/app/kmstool_enclave_cli",
-        "--region", os.getenv("REGION", "us-east-1"),
+        "--region", os.getenv("REGION", "us-west-1"),
         "--proxy-port", "8000",
         "--aws-access-key-id", aws_access_key_id,
         "--aws-secret-access-key", aws_secret_access_key,
@@ -38,6 +38,32 @@ def kms_call(credential, ciphertext):
 
     return plaintext
 
+def kms_generaterandom_call(credential, ciphertext):
+    aws_access_key_id = credential['access_key_id']
+    aws_secret_access_key = credential['secret_access_key']
+    aws_session_token = credential['token']
+
+    subprocess_args = [
+        "/app/kmstool_enclave_new_cli",
+        "--region", os.getenv("REGION", "us-west-1"),
+        "--proxy-port", "8000",
+        "--aws-access-key-id", aws_access_key_id,
+        "--aws-secret-access-key", aws_secret_access_key,
+        "--aws-session-token", aws_session_token,
+        "--ciphertext", ciphertext,
+    ]
+
+    print("subprocess args: {}".format(subprocess_args))
+
+    proc = subprocess.Popen(
+        subprocess_args,
+        stdout=subprocess.PIPE
+    )
+
+    # returns b64 encoded plaintext
+    plaintext = proc.communicate()[0].decode()
+
+    return plaintext
 
 def main():
     print("Starting server...")
@@ -69,35 +95,53 @@ def main():
         transaction_dict = payload_json["transaction_payload"]
         key_encrypted = payload_json["encrypted_key"]
 
-        try:
-            key_b64 = kms_call(credential, key_encrypted)
-        except Exception as e:
-            msg = "exception happened calling kms binary: {}".format(e)
-            print(msg)
-            response_plaintext = msg
 
-        else:
-            key_plaintext = base64.standard_b64decode(key_b64).decode()
-
+        if payload_json["create_key"] :
             try:
-                transaction_dict["value"] = web3.Web3.toWei(transaction_dict["value"], 'ether')
-                transaction_signed = w3.eth.account.sign_transaction(transaction_dict, key_plaintext)
-                response_plaintext = {"transaction_signed": transaction_signed.rawTransaction.hex(),
-                                      "transaction_hash": transaction_signed.hash.hex()}
-
+                new_key_b64 = kms_generaterandom_call(credential, key_encrypted)
             except Exception as e:
-                msg = "exception happened signing the transaction: {}".format(e)
+                msg = "exception happened calling kms binary: {}".format(e)
                 print(msg)
                 response_plaintext = msg
 
-            # delete internal reference to plain text password
-            del key_plaintext
+            else:
+                key_plaintext = base64.standard_b64decode(new_key_b64).decode()
 
-        print("response_plaintext: {}".format(response_plaintext))
+                # delete internal reference to plain text password
+                del key_plaintext
+                c.send(str.encode(json.dumps(key_plaintext)))
+                c.close()
 
-        c.send(str.encode(json.dumps(response_plaintext)))
-        c.close()
 
+        elif payload_json["transaction_payload"] :
+            try:
+                key_b64 = kms_call(credential, key_encrypted)
+            except Exception as e:
+                msg = "exception happened calling kms binary: {}".format(e)
+                print(msg)
+                response_plaintext = msg
+
+            else:
+                key_plaintext = base64.standard_b64decode(key_b64).decode()
+
+                try:
+                    transaction_dict["value"] = web3.Web3.toWei(transaction_dict["value"], 'ether')
+                    transaction_signed = w3.eth.account.sign_transaction(transaction_dict, key_plaintext)
+                    response_plaintext = {"transaction_signed": transaction_signed.rawTransaction.hex(),
+                                        "transaction_hash": transaction_signed.hash.hex()}
+
+                except Exception as e:
+                    msg = "exception happened signing the transaction: {}".format(e)
+                    print(msg)
+                    response_plaintext = msg
+
+                # delete internal reference to plain text password
+                del key_plaintext
+
+            print("response_plaintext: {}".format(response_plaintext))
+
+            c.send(str.encode(json.dumps(response_plaintext)))
+            c.close()
 
 if __name__ == '__main__':
     main()

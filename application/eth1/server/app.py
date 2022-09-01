@@ -28,9 +28,14 @@ class S(BaseHTTPRequestHandler):
                      str(self.path), str(self.headers), post_data.decode('utf-8'))
         payload = json.loads(post_data.decode('utf-8'))
 
-        if not (payload.get("transaction_payload") and payload.get("secret_id")):
+        ## 这里post 的 transaction_payload 
+        if not payload.get("secret_id"):
             self._set_response(404)
             self.wfile.write("transaction_payload or encrypted_key are missing".encode("utf-8"))
+
+        if not payload.get("transaction_payload") and not payload.get("create_key"):
+            self._set_response(404)
+            self.wfile.write("transaction_payload or create_key are missing".encode("utf-8"))
 
         plaintext_json = call_enclave(16, 5000, payload)
 

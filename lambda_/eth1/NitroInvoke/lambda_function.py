@@ -130,6 +130,32 @@ def lambda_handler(event, context):
         response_parsed = json.loads(response_raw)
 
         return response_parsed
+    elif operation == "create_key":
+
+        transaction_payload = event.get("transaction_payload")
+
+        if not transaction_payload:
+            raise Exception("sign_transaction requires transaction_payload and secret_id optionally")
+
+        https_nitro_client = client.HTTPSConnection("{}:{}".format(nitro_instance_private_dns, 443),
+                                                    context=ssl_context)
+
+        try:
+            https_nitro_client.request("POST", "/",
+                                       body=json.dumps({"transaction_payload": transaction_payload,
+                                                        "secret_id": secret_id}))
+            response = https_nitro_client.getresponse()
+        except Exception as e:
+            raise Exception("exception happened sending decryption request to Nitro Enclave: {}".format(e))
+
+        _logger.debug("response: {} {}".format(response.status, response.reason))
+
+        response_raw = response.read()
+
+        _logger.debug("response data: {}".format(response_raw))
+        response_parsed = json.loads(response_raw)
+
+        return response_parsed
 
     else:
         _logger.fatal("operation: {} not supported right now".format(operation))
