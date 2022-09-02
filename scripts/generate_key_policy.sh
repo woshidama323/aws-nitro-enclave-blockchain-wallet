@@ -7,16 +7,16 @@ set +x
 output=${1}
 
 # instance id
-asg_name=$(jq -r '.devNitroWalletEth.ASGGroupName' ${output})
+asg_name=$(jq -r '.newDevNitroWalletEth.ASGGroupName' ${output})
 instance_id=$(./scripts/get_asg_instances.sh ${asg_name} | head -n 1)
 
 # pcr_0
 pcr_0=$(./scripts/get_pcr0.sh ${instance_id})
 
 # ec2 role
-ec2_role_arn=$(jq -r '.devNitroWalletEth.EC2InstanceRoleARN' ${output})
+ec2_role_arn=$(jq -r '.newDevNitroWalletEth.EC2InstanceRoleARN' ${output})
 # lambda role
-lambda_execution_arn=$(jq -r '.devNitroWalletEth.LambdaExecutionRoleARN' ${output})
+lambda_execution_arn=$(jq -r '.newDevNitroWalletEth.LambdaExecutionRoleARN' ${output})
 
 # account
 account_id=$( aws sts get-caller-identity | jq -r '.Account' )
