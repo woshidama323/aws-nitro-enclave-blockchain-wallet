@@ -5,7 +5,7 @@
       "Sid": "Enable decrypt from enclave",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "<newDevNitroWalletEth.EC2InstanceRoleARN>"
+        "AWS": "<devNitroWalletEth.EC2InstanceRoleARN>"
       },
       "Action": "kms:Decrypt",
       "Resource": "*",
@@ -19,7 +19,7 @@
       "Sid": "Enable encrypt from lambda",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "<newDevNitroWalletEth.LambdaExecutionRoleARN>"
+        "AWS": "<devNitroWalletEth.LambdaExecutionRoleARN>"
       },
       "Action": "kms:Encrypt",
       "Resource": "*"

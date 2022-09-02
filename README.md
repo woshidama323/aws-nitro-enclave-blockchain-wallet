@@ -59,7 +59,7 @@ workshop [Activating the virtualenv](https://cdkworkshop.com/30-python/20-create
 
 4. Deploy the example code with the CDK CLI:
     ```bash
-    cdk deploy newDevNitroWalletEth
+    cdk deploy devNitroWalletEth
     ```
 
 ## KMS Key Policy
@@ -72,7 +72,7 @@ workshop [Activating the virtualenv](https://cdkworkshop.com/30-python/20-create
       "Sid": "Enable decrypt from enclave",
       "Effect": "Allow",
       "Principal": {
-        "AWS": <newDevNitroWalletEth.EC2InstanceRoleARN>
+        "AWS": <devNitroWalletEth.EC2InstanceRoleARN>
       },
       "Action": "kms:Decrypt",
       "Resource": "*",
@@ -86,7 +86,7 @@ workshop [Activating the virtualenv](https://cdkworkshop.com/30-python/20-create
       "Sid": "Enable encrypt from lambda",
       "Effect": "Allow",
       "Principal": {
-        "AWS": <newDevNitroWalletEth.LambdaExecutionRoleARN>
+        "AWS": <devNitroWalletEth.LambdaExecutionRoleARN>
       },
       "Action": "kms:Encrypt",
       "Resource": "*"
@@ -122,7 +122,7 @@ workshop [Activating the virtualenv](https://cdkworkshop.com/30-python/20-create
 To leverage the provided `generate_key_policy.sh` script, a CDK output file needs to be provided.
 This file can be created by running the following command:
 ```bash
-cdk deploy newDevNitroWalletEth -O output.json
+cdk deploy devNitroWalletEth -O output.json
 ```
 
 After the `output.json` file has been created, the following command can be used to create the KMS key policy:

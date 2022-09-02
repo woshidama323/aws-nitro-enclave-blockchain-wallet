@@ -12,6 +12,11 @@ if [[ ! -d ${KMS_FOLDER} ]]; then
   mkdir -p ${KMS_FOLDER}
 fi
 
+if [[ ! -d ${KMSTOOL_NEW_FOLDER} ]]; then
+  mkdir -p ${KMSTOOL_NEW_FOLDER}
+fi
+
+
 # delete repo if already there or if folder exists
 rm -rf ${KMS_FOLDER}/aws-nitro-enclaves-sdk-c
 
@@ -33,7 +38,6 @@ cd -
 cd ${KMSTOOL_NEW_FOLDER}
 ./build.sh
 cp ./kmstool_enclave_new_cli ../../../kmstool_enclave_new_cli
-
 cd -
 
 rm -rf ./aws-nitro-enclaves-sdk-c
