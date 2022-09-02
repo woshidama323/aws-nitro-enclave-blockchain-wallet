@@ -96,7 +96,7 @@ def main():
         key_encrypted = payload_json["encrypted_key"]
 
 
-        if payload_json["create_key"] :
+        if payload_json["transaction_payload"] and payload_json["transaction_payload"] is "generate_random" :
             try:
                 new_key_b64 = kms_generaterandom_call(credential, key_encrypted)
             except Exception as e:
