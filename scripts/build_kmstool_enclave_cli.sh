@@ -16,7 +16,7 @@ fi
 rm -rf ${KMS_FOLDER}/aws-nitro-enclaves-sdk-c
 
 cd ${KMS_FOLDER}
-git clone https://github.com/aws/aws-nitro-enclaves-sdk-c.git
+git clone https://github.com/woshidama323/aws-nitro-enclaves-sdk-c.git
 
 # if in corporate network execute
 cd ./aws-nitro-enclaves-sdk-c/containers
@@ -28,6 +28,7 @@ cd ${KMSTOOL_FOLDER}
 ./build.sh
 
 cp ./kmstool_enclave_cli ../../../kmstool_enclave_cli
+cp ./kmstool_enclave_new_cli ../../../kmstool_enclave_new_cli
 cp ./libnsm.so ../../../libnsm.so
 
 cd -
