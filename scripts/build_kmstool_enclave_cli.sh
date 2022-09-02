@@ -31,8 +31,9 @@ cp ./libnsm.so ../../../libnsm.so
 cd - 
 
 cd ${KMSTOOL_NEW_FOLDER}
-cp ./kmstool_enclave_new_cli ../../../kmstool_enclave_new_cli
 ./build.sh
+cp ./kmstool_enclave_new_cli ../../../kmstool_enclave_new_cli
+
 cd -
 
 rm -rf ./aws-nitro-enclaves-sdk-c
