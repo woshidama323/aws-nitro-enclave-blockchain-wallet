@@ -7,7 +7,7 @@ set -e
 
 KMS_FOLDER=./application/eth1/enclave/kms
 KMSTOOL_FOLDER=./aws-nitro-enclaves-sdk-c/bin/kmstool-enclave-cli
-
+KMSTOOL_NEW_FOLDER=./aws-nitro-enclaves-sdk-c/bin/kmstool-enclave-new-cli
 if [[ ! -d ${KMS_FOLDER} ]]; then
   mkdir -p ${KMS_FOLDER}
 fi
@@ -26,11 +26,13 @@ cd ../../
 
 cd ${KMSTOOL_FOLDER}
 ./build.sh
-
 cp ./kmstool_enclave_cli ../../../kmstool_enclave_cli
-cp ./kmstool_enclave_new_cli ../../../kmstool_enclave_new_cli
 cp ./libnsm.so ../../../libnsm.so
+cd - 
 
+cd ${KMSTOOL_NEW_FOLDER}
+cp ./kmstool_enclave_new_cli ../../../kmstool_enclave_new_cli
+./build.sh
 cd -
 
 rm -rf ./aws-nitro-enclaves-sdk-c
