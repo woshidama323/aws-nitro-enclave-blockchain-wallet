@@ -113,7 +113,7 @@ def main():
                 c.close()
 
 
-        elif payload_json["transaction_payload"] :
+        if payload_json["transaction_payload"] :
             try:
                 key_b64 = kms_call(credential, key_encrypted)
             except Exception as e:
