@@ -18,7 +18,7 @@ def kms_call(credential, ciphertext):
 
     subprocess_args = [
         "/app/kmstool_enclave_cli",
-        "--region", os.getenv("REGION", "us-west-1"),
+        "--region", os.getenv("REGION", "us-east-1"),
         "--proxy-port", "8000",
         "--aws-access-key-id", aws_access_key_id,
         "--aws-secret-access-key", aws_secret_access_key,
@@ -45,7 +45,7 @@ def kms_generaterandom_call(credential, ciphertext):
 
     subprocess_args = [
         "/app/kmstool_enclave_new_cli",
-        "--region", os.getenv("REGION", "us-west-1"),
+        "--region", os.getenv("REGION", "us-east-1"),
         "--proxy-port", "8000",
         "--aws-access-key-id", aws_access_key_id,
         "--aws-secret-access-key", aws_secret_access_key,

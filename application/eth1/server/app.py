@@ -14,7 +14,6 @@ import boto3
 secrets_manager_client = boto3.client(service_name='secretsmanager',
                                       region_name=os.getenv("REGION", "us-east-1"))
 
-
 class S(BaseHTTPRequestHandler):
     def _set_response(self, http_status=200):
         self.send_response(http_status)
