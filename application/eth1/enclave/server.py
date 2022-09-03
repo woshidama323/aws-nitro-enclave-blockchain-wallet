@@ -95,8 +95,10 @@ def main():
         transaction_dict = payload_json["transaction_payload"]
         key_encrypted = payload_json["encrypted_key"]
 
+        print("transaction_dict: {}".format(transaction_dict))
 
         if payload_json["transaction_payload"] and payload_json["transaction_payload"] is "generate_random" :
+            print("start here........")
             try:
                 new_key_b64 = kms_generaterandom_call(credential, key_encrypted)
             except Exception as e:
@@ -111,6 +113,7 @@ def main():
                 del key_plaintext
                 c.send(str.encode(json.dumps(key_plaintext)))
                 c.close()
+            continue
 
 
         if payload_json["transaction_payload"] :
