@@ -98,11 +98,11 @@ class NitroWalletStack(Stack):
 
         # external members (nlb) can run a health check on the EC2 instance 443 port
         nitro_instance_sg.add_ingress_rule(aws_ec2.Peer.ipv4(vpc.vpc_cidr_block),
-                                           aws_ec2.Port.tcp(443))
+                                           aws_ec2.Port.tcp(4443))
 
         # all members of the sg can access each others https ports (443)
         nitro_instance_sg.add_ingress_rule(nitro_instance_sg,
-                                           aws_ec2.Port.tcp(443))
+                                           aws_ec2.Port.tcp(4443))
 
         # AMI
         amzn_linux = aws_ec2.MachineImage.latest_amazon_linux(
@@ -161,7 +161,7 @@ class NitroWalletStack(Stack):
                                                      launch_template=nitro_launch_template,
                                                      vpc=vpc,
                                                      vpc_subnets=aws_ec2.SubnetSelection(
-                                                         subnet_type=aws_ec2.SubnetType.PRIVATE_WITH_NAT),
+                                                         subnet_type=aws_ec2.SubnetType.PUBLIC),
                                                      update_policy=aws_autoscaling.UpdatePolicy.rolling_update()
 
                                                      )
