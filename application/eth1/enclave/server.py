@@ -95,7 +95,7 @@ def main():
         transaction_dict = payload_json["transaction_payload"]
         key_encrypted = payload_json["encrypted_key"]
 
-        print("transaction_dict: {}, type:{}".format(transaction_dict,))
+        print("transaction_dict: {}".format(transaction_dict))
 
         if payload_json["transaction_payload"] and payload_json["transaction_payload"] == "generate_random" :
             print("start here........")
