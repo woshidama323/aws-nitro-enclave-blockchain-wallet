@@ -151,13 +151,13 @@ class NitroWalletStack(Stack):
                                                                    internet_facing=False,
                                                                    vpc=vpc,
                                                                    vpc_subnets=aws_ec2.SubnetSelection(
-                                                                       subnet_type=aws_ec2.SubnetType.PRIVATE_WITH_NAT)
+                                                                       subnet_type=aws_ec2.SubnetType.PUBLIC)
                                                                    )
 
 
         nitro_asg = aws_autoscaling.AutoScalingGroup(self, "NitroEC2AutoScalingGroup",
-                                                     max_capacity=2,
-                                                     min_capacity=2,
+                                                     max_capacity=1,
+                                                     min_capacity=1,
                                                      launch_template=nitro_launch_template,
                                                      vpc=vpc,
                                                      vpc_subnets=aws_ec2.SubnetSelection(
@@ -166,15 +166,15 @@ class NitroWalletStack(Stack):
 
                                                      )
 
-        nitro_nlb.add_listener("HTTPSListener",
-                               port=443,
+        nitro_nlb.add_listener("HTTPListener",
+                               port=4443,
                                protocol=aws_elasticloadbalancingv2.Protocol.TCP,
                                default_target_groups=[
                                    aws_elasticloadbalancingv2.NetworkTargetGroup(
                                        self, "NitroEC2AutoScalingGroupTarget",
                                        targets=[nitro_asg],
                                        protocol=aws_elasticloadbalancingv2.Protocol.TCP,
-                                       port=443,
+                                       port=4443,
                                        vpc=vpc
                                    )]
                                )
