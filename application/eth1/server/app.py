@@ -104,7 +104,7 @@ def call_enclave(cid, port, enclave_payload):
     # return json.dumps(payload)
 
 
-def run(server_class=HTTPServer, handler_class=S, port=443):
+def run(server_class=HTTPServer, handler_class=S, port=4443):
     logging.basicConfig(level=logging.INFO)
     server_address = ('0.0.0.0', port)
     httpd = server_class(server_address, handler_class)

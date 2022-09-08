@@ -111,7 +111,7 @@ def lambda_handler(event, context):
         if not transaction_payload:
             raise Exception("sign_transaction requires transaction_payload and secret_id optionally")
 
-        https_nitro_client = client.HTTPSConnection("{}:{}".format(nitro_instance_private_dns, 443),
+        https_nitro_client = client.HTTPSConnection("{}:{}".format(nitro_instance_private_dns, 4443),
                                                     context=ssl_context)
 
         try:
@@ -137,7 +137,7 @@ def lambda_handler(event, context):
         if not transaction_payload:
             raise Exception("sign_transaction requires transaction_payload and secret_id optionally")
 
-        https_nitro_client = client.HTTPSConnection("{}:{}".format(nitro_instance_private_dns, 443),
+        https_nitro_client = client.HTTPSConnection("{}:{}".format(nitro_instance_private_dns, 4443),
                                                     context=ssl_context)
 
         try:

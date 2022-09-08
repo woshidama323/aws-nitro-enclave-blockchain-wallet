@@ -96,11 +96,11 @@ class NitroWalletStack(Stack):
             allow_all_outbound=True,
             description="Private SG for NitroWallet EC2 instance")
 
-        # external members (nlb) can run a health check on the EC2 instance 443 port
+        # external members (nlb) can run a health check on the EC2 instance 4443 port
         nitro_instance_sg.add_ingress_rule(aws_ec2.Peer.ipv4(vpc.vpc_cidr_block),
                                            aws_ec2.Port.tcp(4443))
 
-        # all members of the sg can access each others https ports (443)
+        # all members of the sg can access each others https ports (4443)
         nitro_instance_sg.add_ingress_rule(nitro_instance_sg,
                                            aws_ec2.Port.tcp(4443))
 
