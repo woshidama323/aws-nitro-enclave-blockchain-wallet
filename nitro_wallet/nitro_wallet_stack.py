@@ -207,7 +207,8 @@ class NitroWalletStack(Stack):
                                             vpc_subnets=aws_ec2.SubnetSelection(
                                                 subnet_type=aws_ec2.SubnetType.PUBLIC
                                             ),
-                                            security_groups=[nitro_instance_sg]
+                                            security_groups=[nitro_instance_sg],
+                                            allow_public_subnet = True
                                             )
 
         encrypted_key.grant_write(invoke_lambda)
