@@ -52,8 +52,8 @@ class NitroWalletStack(Stack):
                           nat_gateways=1,
                           subnet_configuration=[aws_ec2.SubnetConfiguration(name='public01',
                                                                             subnet_type=aws_ec2.SubnetType.PUBLIC),
-                                                aws_ec2.SubnetConfiguration(name='public02',
-                                                                            subnet_type=aws_ec2.SubnetType.PUBLIC),
+                                                # aws_ec2.SubnetConfiguration(name='public02',
+                                                #                             subnet_type=aws_ec2.SubnetType.PUBLIC),
                                                 ],
                           enable_dns_support=True,
                           enable_dns_hostnames=True)
