@@ -137,58 +137,59 @@ class NitroWalletStack(Stack):
         signing_server_image.repository.grant_pull(role)
         encrypted_key.grant_read(role)
 
-        # nitro_launch_template = aws_ec2.LaunchTemplate(self, "NitroEC2LauchTemplate",
-        #                                                instance_type=aws_ec2.InstanceType("m5a.xlarge"),
-        #                                                user_data=aws_ec2.UserData.custom(user_data_raw),
-        #                                                nitro_enclave_enabled=True,
-        #                                                machine_image=amzn_linux,
-        #                                                block_devices=[block_device],
-        #                                                role=role,
-        #                                                security_group=nitro_instance_sg
-        #                                                )
-        aws_ec2.Instance(self, "Instance",
-            vpc=vpc,
-            instance_type=aws_ec2.InstanceType("m5a.xlarge"),
-            user_data=aws_ec2.UserData.custom(user_data_raw),
-            nitro_enclave_enabled=True,
-            machine_image=amzn_linux,
-            block_devices=[block_device],
-            role=role,
-            security_group=nitro_instance_sg
-        )
+        nitro_launch_template = aws_ec2.LaunchTemplate(self, "NitroEC2LauchTemplate",
+                                                       instance_type=aws_ec2.InstanceType("m5a.xlarge"),
+                                                       user_data=aws_ec2.UserData.custom(user_data_raw),
+                                                       nitro_enclave_enabled=True,
+                                                       machine_image=amzn_linux,
+                                                       block_devices=[block_device],
+                                                       role=role,
+                                                       security_group=nitro_instance_sg
+                                                       )
+        # aws_ec2.Instance(self, "Instance",
+        #     vpc=vpc,
+        #     instance_type=aws_ec2.InstanceType("m5a.xlarge"),
+        #     user_data=aws_ec2.UserData.custom(user_data_raw),
+        #     nitro_enclave_enabled=True,
+        #     machine_image=amzn_linux,
+        #     block_devices=[block_device],
+        #     role=role,
+        #     security_group=nitro_instance_sg,
+        #     vpc_subnets=aws_ec2.SubnetSelection(subnet_type=aws_ec2.SubnetType.PUBLIC),
+        # )
 
         
-        # nitro_nlb = aws_elasticloadbalancingv2.NetworkLoadBalancer(self, "NitroEC2NetworkLoadBalancer",
-        #                                                            internet_facing=False,
-        #                                                            vpc=vpc,
-        #                                                            vpc_subnets=aws_ec2.SubnetSelection(
-        #                                                                subnet_type=aws_ec2.SubnetType.PUBLIC)
-        #                                                            )
+        nitro_nlb = aws_elasticloadbalancingv2.NetworkLoadBalancer(self, "NitroEC2NetworkLoadBalancer",
+                                                                   internet_facing=False,
+                                                                   vpc=vpc,
+                                                                   vpc_subnets=aws_ec2.SubnetSelection(
+                                                                       subnet_type=aws_ec2.SubnetType.PRIVATE_WITH_NAT)
+                                                                   )
 
 
-        # nitro_asg = aws_autoscaling.AutoScalingGroup(self, "NitroEC2AutoScalingGroup",
-        #                                              max_capacity=1,
-        #                                              min_capacity=1,
-        #                                              launch_template=nitro_launch_template,
-        #                                              vpc=vpc,
-        #                                              vpc_subnets=aws_ec2.SubnetSelection(
-        #                                                  subnet_type=aws_ec2.SubnetType.PUBLIC),
-        #                                              update_policy=aws_autoscaling.UpdatePolicy.rolling_update()
+        nitro_asg = aws_autoscaling.AutoScalingGroup(self, "NitroEC2AutoScalingGroup",
+                                                     max_capacity=1,
+                                                     min_capacity=1,
+                                                     launch_template=nitro_launch_template,
+                                                     vpc=vpc,
+                                                     vpc_subnets=aws_ec2.SubnetSelection(
+                                                         subnet_type=aws_ec2.SubnetType.PRIVATE_WITH_NAT),
+                                                     update_policy=aws_autoscaling.UpdatePolicy.rolling_update()
 
-        #                                              )
+                                                     )
 
-        # nitro_nlb.add_listener("HTTPListener",
-        #                        port=4443,
-        #                        protocol=aws_elasticloadbalancingv2.Protocol.TCP,
-        #                        default_target_groups=[
-        #                            aws_elasticloadbalancingv2.NetworkTargetGroup(
-        #                                self, "NitroEC2AutoScalingGroupTarget",
-        #                                targets=[nitro_asg],
-        #                                protocol=aws_elasticloadbalancingv2.Protocol.TCP,
-        #                                port=4443,
-        #                                vpc=vpc
-        #                            )]
-        #                        )
+        nitro_nlb.add_listener("HTTPListener",
+                               port=4443,
+                               protocol=aws_elasticloadbalancingv2.Protocol.TCP,
+                               default_target_groups=[
+                                   aws_elasticloadbalancingv2.NetworkTargetGroup(
+                                       self, "NitroEC2AutoScalingGroupTarget",
+                                       targets=[nitro_asg],
+                                       protocol=aws_elasticloadbalancingv2.Protocol.TCP,
+                                       port=4443,
+                                       vpc=vpc
+                                   )]
+                               )
 
         invoke_lambda = aws_lambda.Function(self, "NitroInvokeLambda",
                                             code=aws_lambda.Code.from_asset(
