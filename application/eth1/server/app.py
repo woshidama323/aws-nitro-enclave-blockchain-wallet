@@ -74,6 +74,8 @@ def get_aws_session_token():
 
 
 def call_enclave(cid, port, enclave_payload):
+
+    print("response_plaintext: {}".format(enclave_payload))
     secret_id = enclave_payload["secret_id"]
     encrypted_key = get_encrypted_key(secret_id)
 
