@@ -129,9 +129,9 @@ def main():
 
                 try:
                     transaction_dict["value"] = web3.Web3.toWei(int(transaction_dict["value"]), 'wei')
-                    transaction_dict["maxFeePerGas"] = web3.toWei(int(transaction_dict["maxFeePerGas"]), 'wei')
-                    transaction_dict["gas"] = web3.toWei(int(transaction_dict["gas"]), 'wei')
-                    transaction_dict["maxPriorityFeePerGas"] = web3.toWei(int(transaction_dict["maxPriorityFeePerGas"]), 'wei')
+                    transaction_dict["maxFeePerGas"] = web3.Web3.toWei(int(transaction_dict["maxFeePerGas"]), 'wei')
+                    transaction_dict["gas"] = web3.Web3.toWei(int(transaction_dict["gas"]), 'wei')
+                    transaction_dict["maxPriorityFeePerGas"] = web3.Web3.toWei(int(transaction_dict["maxPriorityFeePerGas"]), 'wei')
 
                     transaction_signed = w3.eth.account.sign_transaction(transaction_dict, key_plaintext)
                     response_plaintext = {"transaction_signed": transaction_signed.rawTransaction.hex(),
