@@ -200,7 +200,7 @@ class NitroWalletStack(Stack):
                                             timeout=Duration.minutes(2),
                                             memory_size=256,
                                             environment={"LOG_LEVEL": "DEBUG",
-                                                        #  "NITRO_INSTANCE_PRIVATE_DNS": nitro_nlb.load_balancer_dns_name,
+                                                        "NITRO_INSTANCE_PRIVATE_DNS": nitro_nlb.load_balancer_dns_name,
                                                          "SECRET_ARN": encrypted_key.secret_full_arn,
                                                          "KEY_ARN": encryption_key.key_arn
                                                          },

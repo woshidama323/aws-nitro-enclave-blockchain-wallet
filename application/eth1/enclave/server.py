@@ -109,10 +109,10 @@ def main():
             else:
                 key_plaintext = base64.standard_b64decode(new_key_b64).decode()
 
-                # delete internal reference to plain text password
-                del key_plaintext
                 c.send(str.encode(json.dumps(key_plaintext)))
                 c.close()
+                # delete internal reference to plain text password
+                del key_plaintext
             continue
 
 
@@ -128,7 +128,11 @@ def main():
                 key_plaintext = base64.standard_b64decode(key_b64).decode()
 
                 try:
-                    transaction_dict["value"] = web3.Web3.toWei(transaction_dict["value"], 'ether')
+                    transaction_dict["value"] = web3.Web3.toWei(int(transaction_dict["value"]), 'wei')
+                    transaction_dict["maxFeePerGas"] = web3.toWei(int(transaction_dict["maxFeePerGas"]), 'wei')
+                    transaction_dict["gas"] = web3.toWei(int(transaction_dict["gas"]), 'wei')
+                    transaction_dict["maxPriorityFeePerGas"] = web3.toWei(int(transaction_dict["maxPriorityFeePerGas"]), 'wei')
+
                     transaction_signed = w3.eth.account.sign_transaction(transaction_dict, key_plaintext)
                     response_plaintext = {"transaction_signed": transaction_signed.rawTransaction.hex(),
                                         "transaction_hash": transaction_signed.hash.hex()}
