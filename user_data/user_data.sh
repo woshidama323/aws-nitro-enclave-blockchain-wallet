@@ -34,8 +34,8 @@ sed -r "s/^(\s*$CPU_KEY\s*:\s*).*/\1$DEFAULT_CPU/" -i "$ALLOCATOR_YAML"
 VSOCK_PROXY_YAML=/etc/nitro_enclaves/vsock-proxy.yaml
 cat <<'EOF' > $VSOCK_PROXY_YAML
 allowlist:
-- {address: kms.${__REGION__}.amazonaws.com, port: 4443}
-- {address: kms-fips${__REGION__}.amazonaws.com, port: 4443}
+- {address: kms.${__REGION__}.amazonaws.com, port: 443}
+- {address: kms-fips${__REGION__}.amazonaws.com, port: 443}
 
 EOF
 
